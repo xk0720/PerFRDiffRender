@@ -258,7 +258,7 @@ class PriorLatentMatcher(BaseLatentModel):
             return output_pred
 
         else:  # iterate over all windows
-            # TODO: we modify the online inference strategy. we use sliding window.
+            # modify the online inference strategy useing sliding window.
             # assert seq_len % self.window_size == 0, "seq_len must be divisible by window_size"
             # diff_batch = batch_size * (seq_len // self.window_size)
             # s_audio = speaker_audio.reshape(diff_batch, self.window_size, d)

@@ -36,7 +36,6 @@ def compute_mse(prediction, target):
 def evaluate(cfg, device, model, test_loader, render, split):
     model.eval()
 
-    iteration = 0
     out_dir = os.path.join(cfg.trainer.out_dir, split, 'exp_' + str(cfg.exp_num))
     os.makedirs(out_dir, exist_ok=True)
 
@@ -56,9 +55,6 @@ def evaluate(cfg, device, model, test_loader, render, split):
             listener_reference,
     ) in enumerate(tqdm(test_loader)):
         _3dmm_dim = listener_3dmm_clip.shape[-1]
-
-        # if batch_idx not in [110, 120, 460, 490, 580]:
-        #     continue
 
         (speaker_audio_clip,  # (bs, token_len, 78)
          speaker_video_clip,  # (bs, token_len, 3, 224, 224)
@@ -89,10 +85,6 @@ def evaluate(cfg, device, model, test_loader, render, split):
         if (batch_idx % cfg.test_period) == 0:
             with torch.no_grad():
 
-                # import time
-                # start_time = time.time()
-                # print('starting feed-forward step.')
-
                 _, listener_3dmm_pred = model(
                     speaker_audio=speaker_audio_clip,
                     speaker_emotion_input=speaker_emotion_clip,
@@ -104,11 +96,6 @@ def evaluate(cfg, device, model, test_loader, render, split):
                 # listener_3dmm_pred["prediction_3dmm"].shape: (bs, k_appro==10, seq_len==750, 3dmm_dim==58)
                 listener_3dmm_pred = listener_3dmm_pred["prediction_3dmm"]
 
-                # end_time = time.time()
-                # elapsed_time = end_time - start_time
-                # print(f"Time for one feed-forward step: {elapsed_time:.6f} seconds")
-
-                # TODO: Rendering!
                 render.rendering_for_fid(
                     out_dir,
                     "{}_iter_{}".format(split, str(batch_idx + 1)),
@@ -130,10 +117,8 @@ def evaluate(cfg, device, model, test_loader, render, split):
     all_listener_3dmm_gt = torch.cat(listener_3dmm_gt_list, dim=0)
     # shape: (N * 10, 750, 3dmm_dim)
 
-    # TODO: debug: compute MSE for inference data.
     MSE = compute_mse(all_listener_3dmm_pred, all_listener_3dmm_gt)
     print("MSE over all inference data is {}".format(MSE.item()))
-    # logging.info("MSE over all inference data is {}".format(MSE.item()))
 
 
 def main(args):

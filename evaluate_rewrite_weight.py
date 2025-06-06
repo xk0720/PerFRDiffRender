@@ -107,7 +107,6 @@ def evaluate(cfg, device, model, test_loader, render, split):
                     [_, listener_3dmm_pred], _ = model(x=input_dict, p=listener_3dmm_clip_personal[:1])
                     listener_3dmm_preds[:, i:(i + 1), :, :] = listener_3dmm_pred["prediction_3dmm"]
 
-                # TODO: Rendering!
                 render.rendering_for_fid(
                     out_dir,
                     "{}_iter_{}".format(split, str(batch_idx + 1)),
@@ -129,10 +128,9 @@ def evaluate(cfg, device, model, test_loader, render, split):
     all_listener_3dmm_gt = torch.cat(listener_3dmm_gt_list, dim=0)
     # shape: (N, 750, 3dmm_dim==58)
 
-    # TODO: debug: compute MSE for inference data.
     MSE = compute_mse(all_listener_3dmm_pred, all_listener_3dmm_gt)
     print("MSE over all inference data is {}".format(MSE.item()))
-    # logging.info("MSE over all inference data is {}".format(MSE.item()))
+
 
 def main(args):
     # load yaml config
@@ -148,25 +146,24 @@ def main(args):
     test_loader = get_dataloader(cfg.test_dataset)
     split = cfg.test_dataset.split
 
-    # Set device ordinal if GPUs are available
     if torch.cuda.device_count() > 0:
-        device = torch.device('cuda:0')  # Adjust the device ordinal as needed
+        device = torch.device('cuda:0')
         render = Render('cuda')
     else:
         device = torch.device('cpu')
         render = Render()
 
-    # our diffusion net
+    # diffusion net
     diff_model = getattr(module_arch, cfg.trainer.model)(cfg, device)
     diff_model.to(device)
 
-    # Main Net for modifying model weights.
+    # Main Net for modifying model weights
     main_model = getattr(module_arch, cfg.main_model.type)(cfg, diff_model, device)
     main_model.to(device)
 
     logging.info("-----------------Start Rendering-----------------")
 
-    evaluate(cfg, device, main_model, test_loader, render, split)  # render
+    evaluate(cfg, device, main_model, test_loader, render, split)  # rendering
 
     logging.info("-----------------Finish Rendering-----------------")
 
