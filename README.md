@@ -154,7 +154,7 @@ This project provides several pre-trained models, such as:
 * Personalized Weight Shifts Generation (PWSG) Block
 * Personalized Style Space Learning (PSSL) Block
 
-You can access and download all the available pre-trained models from the following [Google Drive link](https://drive.google.com/file/d/1Drdq3WnQjuOM9GxptC3UsTn_JSsn8_M-/view?usp=sharing). After downloading, please unzip the file and place the `checkpoints` folder into the root directory of this project.
+You can access and download all the available pre-trained models from the following [Google Drive link](https://drive.google.com/file/d/1VjiPqq0uZPigXzTdBnO49srIYVobgHNN/view?usp=sharing). After downloading, please unzip the file and place the `checkpoints` folder into the root directory of this project.
 
 ### External Dependencies
 Our framework leverages two key external tools:
