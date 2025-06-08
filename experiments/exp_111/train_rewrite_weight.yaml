@@ -91,12 +91,12 @@ diffusion_prior:
         final_proj: True
         normformer: False
         rotary_emb: True
-        window_sliding: 25 # todo we modify online inference by utilizing window slide
+        window_sliding: 25
     scheduler:
         noise_schedule: cosine
         timestep_spacing: leading # leading (default) or linspace or trailing
-        num_train_timesteps: 1000 # TODO: set the diffusion steps
-        num_inference_timesteps: 50 # TODO: set the diffusion steps
+        num_train_timesteps: 1000
+        num_inference_timesteps: 50
         predict: start_x # start_x or epsilon
         var_type: fixed_large
         rescale_timesteps: False
@@ -138,7 +138,6 @@ diffusion_decoder:
         personal_emb_dim: 512
         s_3dmm_dim: 58 # encoded dim of speaker 3dmm feature
         concat: concat_first # concat_first or concat_last
-        # TODO: we use three strategies to do the interactions between input and conditions.
         condition_concat: token_concat # feat_concat or token_concat or cascade
         guidance_scale: 7.5 # classifier-free guidance
         l_latent_embed_drop_prob: 1.0  # listener_latent_embed
@@ -150,26 +149,26 @@ diffusion_decoder:
         past_l_emotion_drop_prob: 1.0  # past_listener_emotion
         use_generated_pl: False # whether use generated past listener 3dmm during training
         use_past_frames: False # whether use past frames of listener during inference
-        window_sliding: 25 # todo we modify online inference by utilizing window slide
+        window_sliding: 25
     scheduler:
         noise_schedule: cosine # linear or cosine
         timestep_spacing: leading # leading (default) or linspace or trailing
-        num_train_timesteps: 1000 # TODO: set the diffusion steps
-        num_inference_timesteps: 50 # TODO: set the diffusion steps
+        num_train_timesteps: 1000
+        num_inference_timesteps: 50
         predict: start_x # start_x or epsilon
         var_type: fixed_large # or fixed_small
         rescale_timesteps: False
         noise_std: 1
         k: 1 # k appropriate generations
-        same_latent_noise: True # TODO: we utilize same initial noise to generate all reaction window-clip
-        eta: 0.0 # TODO: for DDIM sampling equation.12
+        same_latent_noise: True
+        eta: 0.0
 
 loss:
     type:
         DiffusionLoss
     args:
         losses_type: [MSELoss, MSELoss] # MSELossWithAct | MSELoss | L1Loss
-        losses_multipliers: [0, 1] # TODO: loss weight
+        losses_multipliers: [0, 1]
         losses_decoded: [False, True]
         k: 1
         temporal_loss_w: 0.0
@@ -200,7 +199,7 @@ main_model: # our main model to modify the weights
         input_dim: 512
         latent_dim: 1024
         embed_dim: 512 # embed dim in Transformer decoder
-        regularization: False # todo debug: we regularize generated weight deviation
+        regularization: False
         regular_w: 0.0 # regularization weight
         num_shared_layers: 2 # for shared encoder
         modified_layers:
@@ -215,7 +214,6 @@ main_model: # our main model to modify the weights
         predict: shift # hyper-net outputs shift [w' = w + delta_w] or offset [w' = w * (1 + delta_w)]
         modify: all # we modify cross-attention's all [W_q & W_k & W_v] or kv [W_k & W_v]
         resume: exp_111/epoch_060_checkpoint.pth
-                # todo resume or load model_hypernet and optimizer_hypernet
     optimizer_hypernet:
         type:
             sgd
@@ -235,7 +233,7 @@ dataset:
     batch_size: 1
     shuffle: True
     num_workers: 16
-    dataset_path: /lustre/projects/Research_Project-T127204/xk219/projects/datasets/listening_head_data/REACT2024
+    dataset_path: ./data
     split: train
     num_person: 16
     num_sample: 4
@@ -258,7 +256,7 @@ validation_dataset:
     batch_size: 1
     shuffle: False
     num_workers: 16
-    dataset_path: /lustre/projects/Research_Project-T127204/xk219/projects/datasets/listening_head_data/REACT2024
+    dataset_path: ./data
     split: val
     num_person: 16
     num_sample: 4
@@ -281,7 +279,7 @@ test_dataset:
     batch_size: 1
     shuffle: False
     num_workers: 16
-    dataset_path: /lustre/projects/Research_Project-T127204/xk219/projects/datasets/listening_head_data/REACT2024
+    dataset_path: ./data
     split: test
     img_size: 256
     crop_size: 224

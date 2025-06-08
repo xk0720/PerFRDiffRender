@@ -91,12 +91,12 @@ diffusion_prior:
         final_proj: True
         normformer: False
         rotary_emb: True
-        window_sliding: 25 # todo we modify online inference by utilizing window slide
+        window_sliding: 25
     scheduler:
         noise_schedule: cosine
         timestep_spacing: leading # leading (default) or linspace or trailing
-        num_train_timesteps: 1000 # TODO: set the diffusion steps
-        num_inference_timesteps: 10 # TODO: set the diffusion steps
+        num_train_timesteps: 1000
+        num_inference_timesteps: 10
         predict: start_x # start_x or epsilon
         var_type: fixed_large
         rescale_timesteps: False
@@ -138,7 +138,6 @@ diffusion_decoder:
         personal_emb_dim: 512
         s_3dmm_dim: 58 # encoded dim of speaker 3dmm feature
         concat: concat_first # concat_first or concat_last
-        # TODO: we use three strategies to do the interactions between input and conditions.
         condition_concat: token_concat # feat_concat or token_concat or cascade
         guidance_scale: 7.5 # classifier-free guidance
         l_latent_embed_drop_prob: 1.0  # listener_latent_embed
@@ -150,19 +149,19 @@ diffusion_decoder:
         past_l_emotion_drop_prob: 1.0  # past_listener_emotion
         use_generated_pl: False # whether use generated past listener 3dmm during training
         use_past_frames: False # whether use past frames of listener during inference
-        window_sliding: 25 # todo we modify online inference by utilizing window slide
+        window_sliding: 25
     scheduler:
         noise_schedule: cosine # linear or cosine
         timestep_spacing: leading # leading (default) or linspace or trailing
-        num_train_timesteps: 1000 # TODO: set the diffusion steps
-        num_inference_timesteps: 50 # TODO: set the diffusion steps
+        num_train_timesteps: 1000
+        num_inference_timesteps: 50
         predict: start_x # start_x or epsilon
         var_type: fixed_large # or fixed_small
         rescale_timesteps: False
         noise_std: 1
         k: 10 # k appropriate generations
-        same_latent_noise: True # TODO: we utilize same initial noise to generate all reaction window-clip
-        eta: 0.0 # TODO: for DDIM sampling equation.12
+        same_latent_noise: True
+        eta: 0.0
 
 loss:
     type:
@@ -202,7 +201,7 @@ dataset:
     batch_size: 4
     shuffle: True
     num_workers: 32
-    dataset_path: /lustre/projects/Research_Project-T127204/xk219/projects/datasets/listening_head_data/REACT2024
+    dataset_path: ./data
     split: train
     num_person: 16
     num_sample: 4
@@ -225,7 +224,7 @@ validation_dataset:
     batch_size: 4
     shuffle: False
     num_workers: 16
-    dataset_path: /lustre/projects/Research_Project-T127204/xk219/projects/datasets/listening_head_data/REACT2024
+    dataset_path: ./data
     split: val
     num_person: 16
     num_sample: 4
@@ -248,7 +247,7 @@ test_dataset:
     batch_size: 1
     shuffle: False
     num_workers: 16
-    dataset_path: /lustre/projects/Research_Project-T127204/xk219/projects/datasets/listening_head_data/REACT2024
+    dataset_path: ./data
     split: test
     img_size: 256
     crop_size: 224
